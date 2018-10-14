@@ -19,5 +19,14 @@
   "bugs": {
     "url": "https://gitlab.com/fausthome/cf-server/issues"
   },
-  "homepage": "https://gitlab.com/fausthome/cf-server#README"
+  "homepage": "https://gitlab.com/fausthome/cf-server#README",
+  "devDependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  },
+  "dependencies": {
+    "http": "^0.0.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
 }
