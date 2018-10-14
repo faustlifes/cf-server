@@ -1,0 +1,23 @@
+{
+  "name": "cf-ua-server",
+  "version": "0.0.1",
+  "description": "Server for cf web portal to Ukrainian patients.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/fausthome/cf-server.git"
+  },
+  "keywords": [
+    "cf",
+    "ua"
+  ],
+  "author": "faust",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/fausthome/cf-server/issues"
+  },
+  "homepage": "https://gitlab.com/fausthome/cf-server#README"
+}
