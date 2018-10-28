@@ -11,9 +11,9 @@ const httpPort = 3005;
 const httpServer = http.createServer(app);
 
 // const src_dir = path.join(__dirname, '../../index.html');
-const public_dir = path.join(__dirname, '../public');
+const publicDir = path.join(__dirname, '../public');
 
-app.use(express.static(public_dir));
+app.use(express.static(publicDir));
 app.use('/api/', apiRouter);
 
 httpServer.listen(httpPort);

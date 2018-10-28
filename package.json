@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch-server": "cd src/ && nodemon index.js -e js, -w ./ --exec babel-node"
+    "watch-server": "cd src/ && nodemon index.js -e js, -w ./ --exec babel-node",
+    "lint-report": "eslint ./src -f node_modules/eslint-html-reporter/reporter.js -o eslint_report.html",
+    "lint-fix": "eslint ./src --fix",
+    "lint": "eslint ./src"
   },
   "repository": {
     "type": "git",
