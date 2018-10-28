@@ -16,6 +16,6 @@ const api = new Router();
  * @routeparam {string} this part is description
  * @route {get} /files/file/info/:fileid
  */
-// api.route('/files/file/info/:fileid').get(sessionTokenMiddleware, Files.getFileInfoById);
+api.route('/test').get((req, res) => { res.status(200).json({ status: 'OK' }).end(); });
 
 export default api;
