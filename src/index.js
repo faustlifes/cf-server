@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import path from 'path';
 import apiRouter from './routes/api';
+import Configurations from './config/configurations';
 
 const app = express();
 // set up ejs for templating. You can use whatever
@@ -15,6 +16,8 @@ const publicDir = path.join(__dirname, '../public');
 
 app.use(express.static(publicDir));
 app.use('/api/', apiRouter);
+
+Configurations.loadConfigurations();
 
 httpServer.listen(httpPort);
 
