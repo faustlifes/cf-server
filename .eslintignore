@@ -1,0 +1,8 @@
+**/node_modules/**/*.js
+**/docs/**/*
+**/spec/**/*.js
+**/dist/**/*.js
+**/lib/**/*.js
+**/bundle.js
+**/webpack.config.js
+**/deploy/**
