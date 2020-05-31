@@ -1,3 +1,4 @@
+/*
 import express from 'express';
 import http from 'http';
 import path from 'path';
@@ -22,3 +23,4 @@ Configurations.loadConfigurations();
 httpServer.listen(httpPort);
 
 console.log(`Server http starting on port: ${httpPort}`);
+*/
