@@ -7,7 +7,9 @@ const path = {
 const configurations = {};
 class Configurations extends Singleton {
   loadConfigurations = () => {
-    configurations.db = JSON.parse(fs.readFileSync(`${process.cwd()}/config/${path.db}`).toString());
+    configurations.db = JSON.parse(
+      fs.readFileSync(`${process.cwd()}/config/${path.db}`).toString(),
+    );
   };
 }
 
