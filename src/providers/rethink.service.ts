@@ -1,41 +1,43 @@
-import { Injectable, Inject } from "@nestjs/common";
-import * as r from "rethinkdb"
+import { Injectable, Inject } from '@nestjs/common';
+import * as r from 'rethinkdb';
 
 @Injectable()
 export class RethinkService {
+  private connection: r.Connection;
 
-	private connection: r.Connection
+  constructor(@Inject('RethinkProvider') connection) {
+    this.connection = connection;
+  }
 
-	constructor(@Inject('RethinkProvider') connection) {
-		this.connection = connection
-	}
+  /**
+   * Creates a new table in the RethinkDB instance
+   * @param tableName Name of the new Table
+   * @returns Creation status promise
+   */
+  async createTable(tableName: string): Promise<r.CreateResult> {
+    const result = await r
+      .db('cfUkraine')
+      .tableCreate(tableName)
+      .run(this.connection);
+    return result;
+  }
 
-	/**
-	 * Creates a new table in the RethinkDB instance
-	 * @param tableName Name of the new Table
-	 * @returns Creation status promise
-	 */
-	async createTable(tableName:string): Promise<r.CreateResult> {
-		const result = await r.db('cfUkraine').tableCreate(tableName).run(this.connection)
-		return result
-	}
+  /**
+   * Inserts data in the specified table
+   * @param tableName Table where insert data
+   * @param content Data to insert
+   */
+  async insert(tableName: string, content: object): Promise<r.WriteResult> {
+    const result = await r
+      .table(tableName)
+      .insert(content)
+      .run(this.connection);
 
-	/**
-	 * Inserts data in the specified table
-	 * @param tableName Table where insert data
-	 * @param content Data to insert
-	 */
-	async insert(tableName:string, content:object): Promise<r.WriteResult> {
-		const result = await r
-			.table(tableName)
-			.insert(content)
-			.run(this.connection)
+    return result;
+  }
 
-		return result
-	}
-
-	initMeetingsDbConnection() {
-/*		let conn = null;
+  initMeetingsDbConnection() {
+    /*		let conn = null;
 		return r.connect(configurations.readAllAndMergeFrom('conf/rethinkdb-connection.json'))
 			.then((connection) => {
 				conn = connection;
@@ -80,6 +82,5 @@ export class RethinkService {
 				]);
 			})
 			.then(() => r.connect(configurations.readAllAndMergeFrom('conf/rethinkdb-connection.json', 'conf/rethinkdb-connection-meetings.json')));*/
-	}
-
+  }
 }

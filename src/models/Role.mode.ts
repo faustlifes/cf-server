@@ -1,13 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class UserModel {
+export class Role {
   @PrimaryGeneratedColumn()
   id: string;
   @Column()
   name: string;
-  @Column()
-  email: string;
-  @Column()
-  pass: string;
 }
