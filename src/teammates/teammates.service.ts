@@ -1,30 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { RethinkService } from '../providers/rethink.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { TeammateEntity } from '../entities/Teammate.entity';
 import { CreateTeammateDto } from './dto/create-teammate.dto';
 
 @Injectable()
 export class TeammatesService {
-  private readonly tableName = 'teammates';
-
-  constructor(private readonly rethinkService: RethinkService) {}
+  constructor(
+    @InjectRepository(TeammateEntity)
+    private readonly teammateRepository: Repository<TeammateEntity>,
+  ) {}
 
   async findAll() {
-    return this.rethinkService.findAll(this.tableName);
+    return this.teammateRepository.find();
   }
 
   async findOne(id: string) {
-    return this.rethinkService.findById(this.tableName, id);
+    return this.teammateRepository.findOne({ where: { id } });
   }
 
   async create(createTeammateDto: CreateTeammateDto) {
-    return this.rethinkService.insert(this.tableName, createTeammateDto);
+    const teammate = this.teammateRepository.create(createTeammateDto);
+    return this.teammateRepository.save(teammate);
   }
 
   async update(id: string, updateTeammateDto: any) {
-    return this.rethinkService.update(this.tableName, id, updateTeammateDto);
+    await this.teammateRepository.update(id, updateTeammateDto);
+    return this.findOne(id);
   }
 
   async remove(id: string) {
-    return this.rethinkService.delete(this.tableName, id);
+    return this.teammateRepository.delete(id);
   }
 }

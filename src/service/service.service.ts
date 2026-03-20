@@ -1,30 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { RethinkService } from '../providers/rethink.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ServiceItemEntity } from '../entities/ServiceItem.entity';
 import { CreateServiceItemDto } from './dto/create-service-item.dto';
 
 @Injectable()
 export class ServiceService {
-  private readonly tableName = 'services';
-
-  constructor(private readonly rethinkService: RethinkService) {}
+  constructor(
+    @InjectRepository(ServiceItemEntity)
+    private readonly serviceRepository: Repository<ServiceItemEntity>,
+  ) {}
 
   async findAll() {
-    return this.rethinkService.findAll(this.tableName);
+    return this.serviceRepository.find();
   }
 
   async findOne(id: string) {
-    return this.rethinkService.findById(this.tableName, id);
+    return this.serviceRepository.findOne({ where: { id } });
   }
 
   async create(createServiceItemDto: CreateServiceItemDto) {
-    return this.rethinkService.insert(this.tableName, createServiceItemDto);
+    const item = this.serviceRepository.create(createServiceItemDto);
+    return this.serviceRepository.save(item);
   }
 
   async update(id: string, updateServiceItemDto: any) {
-    return this.rethinkService.update(this.tableName, id, updateServiceItemDto);
+    await this.serviceRepository.update(id, updateServiceItemDto);
+    return this.findOne(id);
   }
 
   async remove(id: string) {
-    return this.rethinkService.delete(this.tableName, id);
+    return this.serviceRepository.delete(id);
   }
 }

@@ -1,30 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { RethinkService } from '../providers/rethink.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { NewsEntity } from '../entities/News.entity';
 import { CreateNewsDto } from './dto/create-news.dto';
 
 @Injectable()
 export class NewsService {
-  private readonly tableName = 'news';
-
-  constructor(private readonly rethinkService: RethinkService) {}
+  constructor(
+    @InjectRepository(NewsEntity)
+    private readonly newsRepository: Repository<NewsEntity>,
+  ) {}
 
   async findAll() {
-    return this.rethinkService.findAll(this.tableName);
+    return this.newsRepository.find();
   }
 
   async findOne(id: string) {
-    return this.rethinkService.findById(this.tableName, id);
+    return this.newsRepository.findOne({ where: { id } });
   }
 
   async create(createNewsDto: CreateNewsDto) {
-    return this.rethinkService.insert(this.tableName, createNewsDto);
+    const news = this.newsRepository.create(createNewsDto);
+    return this.newsRepository.save(news);
   }
 
   async update(id: string, updateNewsDto: any) {
-    return this.rethinkService.update(this.tableName, id, updateNewsDto);
+    await this.newsRepository.update(id, updateNewsDto);
+    return this.findOne(id);
   }
 
   async remove(id: string) {
-    return this.rethinkService.delete(this.tableName, id);
+    return this.newsRepository.delete(id);
   }
 }

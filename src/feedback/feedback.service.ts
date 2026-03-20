@@ -1,30 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { RethinkService } from '../providers/rethink.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { FeedbackEntity } from '../entities/Feedback.entity';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 
 @Injectable()
 export class FeedbackService {
-  private readonly tableName = 'feedback';
-
-  constructor(private readonly rethinkService: RethinkService) {}
+  constructor(
+    @InjectRepository(FeedbackEntity)
+    private readonly feedbackRepository: Repository<FeedbackEntity>,
+  ) {}
 
   async findAll() {
-    return this.rethinkService.findAll(this.tableName);
+    return this.feedbackRepository.find();
   }
 
   async findOne(id: string) {
-    return this.rethinkService.findById(this.tableName, id);
+    return this.feedbackRepository.findOne({ where: { id } });
   }
 
   async create(createFeedbackDto: CreateFeedbackDto) {
-    return this.rethinkService.insert(this.tableName, createFeedbackDto);
+    const feedback = this.feedbackRepository.create(createFeedbackDto);
+    return this.feedbackRepository.save(feedback);
   }
 
   async update(id: string, updateFeedbackDto: any) {
-    return this.rethinkService.update(this.tableName, id, updateFeedbackDto);
+    await this.feedbackRepository.update(id, updateFeedbackDto);
+    return this.findOne(id);
   }
 
   async remove(id: string) {
-    return this.rethinkService.delete(this.tableName, id);
+    return this.feedbackRepository.delete(id);
   }
 }

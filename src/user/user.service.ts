@@ -1,35 +1,38 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { RethinkService } from '../providers/rethink.service';
+import { UserEntity } from '../entities/User.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
-  private readonly tableName = 'users';
-
-  constructor(private readonly rethinkService: RethinkService) {}
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+  ) {}
 
   async findAll() {
-    return this.rethinkService.findAll(this.tableName);
+    return this.userRepository.find();
   }
 
   async findOne(id: string) {
-    return this.rethinkService.findById(this.tableName, id);
+    return this.userRepository.findOne({ where: { id } });
   }
 
   async findByEmail(email: string) {
-    const results = await this.rethinkService.findAll(this.tableName);
-    return results.find(user => user.email === email);
+    return this.userRepository.findOne({ where: { email } });
   }
 
   async create(createUserDto: CreateUserDto) {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(createUserDto.pass, salt);
     
-    return this.rethinkService.insert(this.tableName, {
+    const user = this.userRepository.create({
       ...createUserDto,
       pass: hashedPassword,
     });
+    return this.userRepository.save(user);
   }
 
   async update(id: string, updateUserDto: any) {
@@ -37,10 +40,11 @@ export class UserService {
       const salt = await bcrypt.genSalt();
       updateUserDto.pass = await bcrypt.hash(updateUserDto.pass, salt);
     }
-    return this.rethinkService.update(this.tableName, id, updateUserDto);
+    await this.userRepository.update(id, updateUserDto);
+    return this.findOne(id);
   }
 
   async remove(id: string) {
-    return this.rethinkService.delete(this.tableName, id);
+    return this.userRepository.delete(id);
   }
 }

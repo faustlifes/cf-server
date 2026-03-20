@@ -1,30 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { RethinkService } from '../providers/rethink.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { PortfolioItemEntity } from '../entities/PortfolioItem.entity';
 import { CreatePortfolioItemDto } from './dto/create-portfolio-item.dto';
 
 @Injectable()
 export class PortfolioService {
-  private readonly tableName = 'portfolio';
-
-  constructor(private readonly rethinkService: RethinkService) {}
+  constructor(
+    @InjectRepository(PortfolioItemEntity)
+    private readonly portfolioRepository: Repository<PortfolioItemEntity>,
+  ) {}
 
   async findAll() {
-    return this.rethinkService.findAll(this.tableName);
+    return this.portfolioRepository.find();
   }
 
   async findOne(id: string) {
-    return this.rethinkService.findById(this.tableName, id);
+    return this.portfolioRepository.findOne({ where: { id } });
   }
 
   async create(createPortfolioItemDto: CreatePortfolioItemDto) {
-    return this.rethinkService.insert(this.tableName, createPortfolioItemDto);
+    const item = this.portfolioRepository.create(createPortfolioItemDto);
+    return this.portfolioRepository.save(item);
   }
 
   async update(id: string, updatePortfolioItemDto: any) {
-    return this.rethinkService.update(this.tableName, id, updatePortfolioItemDto);
+    await this.portfolioRepository.update(id, updatePortfolioItemDto);
+    return this.findOne(id);
   }
 
   async remove(id: string) {
-    return this.rethinkService.delete(this.tableName, id);
+    return this.portfolioRepository.delete(id);
   }
 }

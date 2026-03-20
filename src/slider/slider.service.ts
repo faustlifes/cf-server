@@ -1,30 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { RethinkService } from '../providers/rethink.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { SliderItemEntity } from '../entities/SliderItem.entity';
 import { CreateSliderItemDto } from './dto/create-slider-item.dto';
 
 @Injectable()
 export class SliderService {
-  private readonly tableName = 'sliders';
-
-  constructor(private readonly rethinkService: RethinkService) {}
+  constructor(
+    @InjectRepository(SliderItemEntity)
+    private readonly sliderRepository: Repository<SliderItemEntity>,
+  ) {}
 
   async findAll() {
-    return this.rethinkService.findAll(this.tableName);
+    return this.sliderRepository.find();
   }
 
   async findOne(id: string) {
-    return this.rethinkService.findById(this.tableName, id);
+    return this.sliderRepository.findOne({ where: { id } });
   }
 
   async create(createSliderItemDto: CreateSliderItemDto) {
-    return this.rethinkService.insert(this.tableName, createSliderItemDto);
+    const item = this.sliderRepository.create(createSliderItemDto);
+    return this.sliderRepository.save(item);
   }
 
   async update(id: string, updateSliderItemDto: any) {
-    return this.rethinkService.update(this.tableName, id, updateSliderItemDto);
+    await this.sliderRepository.update(id, updateSliderItemDto);
+    return this.findOne(id);
   }
 
   async remove(id: string) {
-    return this.rethinkService.delete(this.tableName, id);
+    return this.sliderRepository.delete(id);
   }
 }
