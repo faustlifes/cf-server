@@ -1,35 +1,37 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { BaseController } from '../common/base.controller';
+import { Public } from '../auth/public.decorator';
 
 @Controller('news')
-export class NewsController {
-  constructor(private readonly newsService: NewsService) {}
+export class NewsController extends BaseController {
+  constructor(private readonly newsService: NewsService) {
+    super();
+  }
 
+  @Public()
   @Get()
   findAll() {
     return this.newsService.findAll();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.newsService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createNewsDto: CreateNewsDto) {
     return this.newsService.create(createNewsDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put(':id')
   update(@Param('id') id: string, @Body() updateNewsDto: any) {
     return this.newsService.update(id, updateNewsDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.newsService.remove(id);

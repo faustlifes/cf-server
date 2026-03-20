@@ -1,35 +1,37 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { CreatePortfolioItemDto } from './dto/create-portfolio-item.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { BaseController } from '../common/base.controller';
+import { Public } from '../auth/public.decorator';
 
 @Controller('portfolio')
-export class PortfolioController {
-  constructor(private readonly portfolioService: PortfolioService) {}
+export class PortfolioController extends BaseController {
+  constructor(private readonly portfolioService: PortfolioService) {
+    super();
+  }
 
+  @Public()
   @Get()
   findAll() {
     return this.portfolioService.findAll();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.portfolioService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createPortfolioItemDto: CreatePortfolioItemDto) {
     return this.portfolioService.create(createPortfolioItemDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put(':id')
   update(@Param('id') id: string, @Body() updatePortfolioItemDto: any) {
     return this.portfolioService.update(id, updatePortfolioItemDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.portfolioService.remove(id);
