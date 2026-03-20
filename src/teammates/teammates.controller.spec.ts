@@ -8,7 +8,13 @@ describe('TeammatesController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TeammatesController],
-      providers: [TeammatesService],
+      providers: [
+        TeammatesService,
+        {
+          provide: 'TeammateEntityRepository',
+          useValue: {},
+        },
+      ],
     }).compile();
 
     controller = module.get<TeammatesController>(TeammatesController);

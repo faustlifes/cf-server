@@ -8,7 +8,13 @@ describe('NewsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NewsController],
-      providers: [NewsService],
+      providers: [
+        NewsService,
+        {
+          provide: 'NewsEntityRepository',
+          useValue: {},
+        },
+      ],
     }).compile();
 
     controller = module.get<NewsController>(NewsController);
