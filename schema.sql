@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS news (
     id CHAR(36) PRIMARY KEY,
     src VARCHAR(255) NOT NULL,
     date VARCHAR(255) NOT NULL,
-    title VARCHAR(255) NOT NULL
+    title VARCHAR(255) NOT NULL,
+    text TEXT NOT NULL
 );
 
 -- Feedback Table

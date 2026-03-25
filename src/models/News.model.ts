@@ -14,4 +14,7 @@ export class NewsModel {
 
   @jsonMember
   title: string;
+
+  @jsonMember
+  text: string;
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/User.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class UserService {
@@ -23,7 +24,7 @@ export class UserService {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  private encodePassword(name: string, pass: string): string {
+  public encodePassword(name: string, pass: string): string {
     const encodedPass = Buffer.from(pass).toString('base64');
     return Buffer.from(`${name}:${encodedPass}`).toString('base64');
   }
@@ -69,5 +70,27 @@ export class UserService {
 
   async remove(id: string) {
     return this.userRepository.delete(id);
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { email, oldPassword, newPassword, confirmNewPassword } = resetPasswordDto;
+
+    if (newPassword !== confirmNewPassword) {
+      throw new Error('New passwords do not match');
+    }
+
+    const user = await this.findByEmail(email);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const encodedOldPass = this.encodePassword(user.name, oldPassword);
+    if (user.pass !== encodedOldPass) {
+      throw new Error('Invalid old password');
+    }
+
+    const hashedNewPassword = this.encodePassword(user.name, newPassword);
+    user.pass = hashedNewPassword;
+    return this.userRepository.save(user);
   }
 }

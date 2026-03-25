@@ -3,4 +3,4 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller()
 @UseGuards(JwtAuthGuard)
-export class BaseController {}
+export class BaseController { }
