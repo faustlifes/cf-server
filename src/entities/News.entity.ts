@@ -8,7 +8,7 @@ export class NewsEntity {
   @Column()
   src: string;
 
-  @Column()
+  @Column({ type: 'date' })
   date: string;
 
   @Column()

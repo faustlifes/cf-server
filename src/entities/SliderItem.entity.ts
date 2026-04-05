@@ -5,7 +5,7 @@ export class SliderItemEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'mediumtext' })
   img: string;
 
   @Column()

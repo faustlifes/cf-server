@@ -5,7 +5,7 @@ export class TeammateEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'mediumtext', nullable: false })
   src: string;
 
   @Column()

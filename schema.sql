@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS news (
     id CHAR(36) PRIMARY KEY,
     src VARCHAR(255) NOT NULL,
-    date VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
     title VARCHAR(255) NOT NULL,
     text TEXT NOT NULL
 );
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS service_items (
 -- Slider Items Table
 CREATE TABLE IF NOT EXISTS slider_items (
     id CHAR(36) PRIMARY KEY,
-    img VARCHAR(255) NOT NULL,
+    img MEDIUMTEXT NOT NULL,
     title1 VARCHAR(255) NOT NULL,
     title2 VARCHAR(255) NOT NULL,
     subTitle VARCHAR(255) NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS team_facts (
 -- Teammates Table
 CREATE TABLE IF NOT EXISTS teammates (
     id CHAR(36) PRIMARY KEY,
-    src VARCHAR(255) NOT NULL,
+    src MEDIUMTEXT NOT NULL,
     name VARCHAR(255) NOT NULL,
     position VARCHAR(255) NOT NULL,
     social JSON -- To store social links as a JSON object
