@@ -9,4 +9,5 @@ export default registerAs('database', () => ({
   database: process.env.MYSQL_DB_DATABASE || 'cf_db',
   synchronize: process.env.MYSQL_DB_SYNCHRONIZE === 'true',
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  migrations: [__dirname + '/../migrations/**{.ts,.js}'],
 }));

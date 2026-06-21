@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { CreatePortfolioItemDto } from './dto/create-portfolio-item.dto';
+import { UpdatePortfolioItemDto } from './dto/update-portfolio-item.dto';
 import { BaseController } from '../common/base.controller';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Public } from '../auth/public.decorator';
 
 @Controller('portfolio')
+@UseGuards(JwtAuthGuard)
 export class PortfolioController extends BaseController {
   constructor(private readonly portfolioService: PortfolioService) {
     super();
@@ -28,7 +31,7 @@ export class PortfolioController extends BaseController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updatePortfolioItemDto: any) {
+  update(@Param('id') id: string, @Body() updatePortfolioItemDto: UpdatePortfolioItemDto) {
     return this.portfolioService.update(id, updatePortfolioItemDto);
   }
 

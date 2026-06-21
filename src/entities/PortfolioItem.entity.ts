@@ -15,5 +15,5 @@ export class PortfolioItemEntity {
   category: string;
 
   @Column({ nullable: true })
-  title2: string;
+  title2: string | null;
 }
