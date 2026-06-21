@@ -14,4 +14,7 @@ export class PortfolioItemModel {
 
   @jsonMember
   category: string;
+
+  @jsonMember
+  title2: string;
 }

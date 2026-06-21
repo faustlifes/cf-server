@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreatePortfolioItemDto {
   @IsString()
@@ -12,4 +12,8 @@ export class CreatePortfolioItemDto {
   @IsString()
   @IsNotEmpty()
   category: string;
+
+  @IsString()
+  @IsOptional()
+  title2?: string;
 }
