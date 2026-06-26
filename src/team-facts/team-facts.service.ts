@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TeamFactEntity } from '../entities/TeamFact.entity';
@@ -25,8 +25,10 @@ export class TeamFactsService {
   }
 
   async update(id: string, updateTeamFactDto: any) {
+    const existing = await this.teamFactRepository.findOne({ where: { id } });
+    if (!existing) throw new NotFoundException(`Team fact ${id} not found`);
     await this.teamFactRepository.update(id, updateTeamFactDto);
-    return this.findOne(id);
+    return this.teamFactRepository.findOne({ where: { id } });
   }
 
   async remove(id: string) {

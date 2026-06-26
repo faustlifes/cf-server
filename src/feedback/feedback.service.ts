@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FeedbackEntity } from '../entities/Feedback.entity';
@@ -25,8 +25,10 @@ export class FeedbackService {
   }
 
   async update(id: string, updateFeedbackDto: any) {
+    const existing = await this.feedbackRepository.findOne({ where: { id } });
+    if (!existing) throw new NotFoundException(`Feedback item ${id} not found`);
     await this.feedbackRepository.update(id, updateFeedbackDto);
-    return this.findOne(id);
+    return this.feedbackRepository.findOne({ where: { id } });
   }
 
   async remove(id: string) {

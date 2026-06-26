@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SliderItemEntity } from '../entities/SliderItem.entity';
@@ -25,8 +25,10 @@ export class SliderService {
   }
 
   async update(id: string, updateSliderItemDto: any) {
+    const existing = await this.sliderRepository.findOne({ where: { id } });
+    if (!existing) throw new NotFoundException(`Slider item ${id} not found`);
     await this.sliderRepository.update(id, updateSliderItemDto);
-    return this.findOne(id);
+    return this.sliderRepository.findOne({ where: { id } });
   }
 
   async remove(id: string) {
