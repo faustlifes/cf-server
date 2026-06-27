@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { NewsService } from './news.service';
-import { NewsEntity } from '../entities/News.entity';
+import { TeamFactsService } from './team-facts.service';
+import { TeamFactEntity } from '../entities/TeamFact.entity';
 
 const mockRepo = {
   find: jest.fn(),
@@ -13,18 +13,18 @@ const mockRepo = {
   delete: jest.fn(),
 };
 
-describe('NewsService', () => {
-  let service: NewsService;
+describe('TeamFactsService', () => {
+  let service: TeamFactsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        NewsService,
-        { provide: getRepositoryToken(NewsEntity), useValue: mockRepo },
+        TeamFactsService,
+        { provide: getRepositoryToken(TeamFactEntity), useValue: mockRepo },
       ],
     }).compile();
 
-    service = module.get<NewsService>(NewsService);
+    service = module.get<TeamFactsService>(TeamFactsService);
     jest.clearAllMocks();
   });
 
@@ -35,17 +35,17 @@ describe('NewsService', () => {
   describe('update', () => {
     it('throws NotFoundException when item does not exist', async () => {
       mockRepo.findOne.mockResolvedValueOnce(null);
-      await expect(service.update('nonexistent-id', { title: 'New' })).rejects.toThrow(NotFoundException);
+      await expect(service.update('nonexistent-id', { value: 99 })).rejects.toThrow(NotFoundException);
       expect(mockRepo.update).not.toHaveBeenCalled();
     });
 
     it('updates and returns the item when it exists', async () => {
-      const existing = { id: '1', title: 'Old' };
-      const updated = { id: '1', title: 'New' };
+      const existing = { id: '1', value: 1 };
+      const updated = { id: '1', value: 99 };
       mockRepo.findOne.mockResolvedValueOnce(existing).mockResolvedValueOnce(updated);
       mockRepo.update.mockResolvedValueOnce({ affected: 1 });
-      const result = await service.update('1', { title: 'New' });
-      expect(mockRepo.update).toHaveBeenCalledWith('1', { title: 'New' });
+      const result = await service.update('1', { value: 99 });
+      expect(mockRepo.update).toHaveBeenCalledWith('1', { value: 99 });
       expect(result).toEqual(updated);
     });
   });

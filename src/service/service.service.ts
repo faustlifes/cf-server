@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceItemEntity } from '../entities/ServiceItem.entity';
@@ -25,8 +25,10 @@ export class ServiceService {
   }
 
   async update(id: string, updateServiceItemDto: any) {
+    const existing = await this.serviceRepository.findOne({ where: { id } });
+    if (!existing) throw new NotFoundException(`Service item ${id} not found`);
     await this.serviceRepository.update(id, updateServiceItemDto);
-    return this.findOne(id);
+    return this.serviceRepository.findOne({ where: { id } });
   }
 
   async remove(id: string) {

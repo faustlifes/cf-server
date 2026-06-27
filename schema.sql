@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS portfolio_items (
     id CHAR(36) PRIMARY KEY,
     src VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
-    category VARCHAR(255) NOT NULL
+    category VARCHAR(255) NOT NULL,
+    title2 VARCHAR(255) NULL
 );
 
 -- Service Items Table

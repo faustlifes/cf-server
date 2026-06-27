@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TeammateEntity } from '../entities/Teammate.entity';
@@ -25,8 +25,10 @@ export class TeammatesService {
   }
 
   async update(id: string, updateTeammateDto: any) {
+    const existing = await this.teammateRepository.findOne({ where: { id } });
+    if (!existing) throw new NotFoundException(`Teammate ${id} not found`);
     await this.teammateRepository.update(id, updateTeammateDto);
-    return this.findOne(id);
+    return this.teammateRepository.findOne({ where: { id } });
   }
 
   async remove(id: string) {

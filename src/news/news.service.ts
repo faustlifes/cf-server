@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NewsEntity } from '../entities/News.entity';
@@ -25,8 +25,10 @@ export class NewsService {
   }
 
   async update(id: string, updateNewsDto: any) {
+    const existing = await this.newsRepository.findOne({ where: { id } });
+    if (!existing) throw new NotFoundException(`News item ${id} not found`);
     await this.newsRepository.update(id, updateNewsDto);
-    return this.findOne(id);
+    return this.newsRepository.findOne({ where: { id } });
   }
 
   async remove(id: string) {

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { NewsService } from './news.service';
-import { NewsEntity } from '../entities/News.entity';
+import { ServiceService } from './service.service';
+import { ServiceItemEntity } from '../entities/ServiceItem.entity';
 
 const mockRepo = {
   find: jest.fn(),
@@ -13,18 +13,18 @@ const mockRepo = {
   delete: jest.fn(),
 };
 
-describe('NewsService', () => {
-  let service: NewsService;
+describe('ServiceService', () => {
+  let service: ServiceService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        NewsService,
-        { provide: getRepositoryToken(NewsEntity), useValue: mockRepo },
+        ServiceService,
+        { provide: getRepositoryToken(ServiceItemEntity), useValue: mockRepo },
       ],
     }).compile();
 
-    service = module.get<NewsService>(NewsService);
+    service = module.get<ServiceService>(ServiceService);
     jest.clearAllMocks();
   });
 

@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PortfolioItemEntity } from '../entities/PortfolioItem.entity';
 import { CreatePortfolioItemDto } from './dto/create-portfolio-item.dto';
+import { UpdatePortfolioItemDto } from './dto/update-portfolio-item.dto';
 
 @Injectable()
 export class PortfolioService {
@@ -24,9 +25,11 @@ export class PortfolioService {
     return this.portfolioRepository.save(item);
   }
 
-  async update(id: string, updatePortfolioItemDto: any) {
+  async update(id: string, updatePortfolioItemDto: UpdatePortfolioItemDto) {
+    const existing = await this.portfolioRepository.findOne({ where: { id } });
+    if (!existing) throw new NotFoundException(`Portfolio item ${id} not found`);
     await this.portfolioRepository.update(id, updatePortfolioItemDto);
-    return this.findOne(id);
+    return this.portfolioRepository.findOne({ where: { id } });
   }
 
   async remove(id: string) {

@@ -13,4 +13,7 @@ export class PortfolioItemEntity {
 
   @Column()
   category: string;
+
+  @Column({ nullable: true })
+  title2: string | null;
 }
