@@ -26,7 +26,8 @@ export class AboutService {
   async update(id: string, updateAboutContentDto: any) {
     const existing = await this.aboutRepository.findOne({ where: { id } });
     if (!existing) throw new NotFoundException(`About content ${id} not found`);
-    await this.aboutRepository.update(id, updateAboutContentDto);
-    return this.aboutRepository.findOne({ where: { id } });
+    const { skills, ...scalarFields } = updateAboutContentDto;
+    await this.aboutRepository.update(id, scalarFields);
+    return this.aboutRepository.findOne({ where: { id }, relations: ['skills'] });
   }
 }
